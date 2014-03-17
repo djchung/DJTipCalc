@@ -9,5 +9,9 @@
     <string name="tenPercent">10%</string>
     <string name="fifthteenPercent">15%</string>
     <string name="twentyPercent">20%</string>
+    <string name="enterCustomTip">Enter Custom Tip</string>
+    <string name="tipLabel">Tip:</string>
+    <string name="totalString">Total:</string>
+    <string name="tipString">Tip:</string>
 
 </resources>
