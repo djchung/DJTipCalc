@@ -1,5 +1,6 @@
 TODO:
-[] prepend numeric values with $
-[] font consistency
+[x] prepend numeric values with $
+[x] font consistency
 [] right align bill amount edittext
 [] design
+[] show logical currency amount

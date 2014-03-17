@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
@@ -35,12 +36,34 @@ public class TipActivity extends Activity {
 		mCustomRadioButton = (RadioButton) findViewById(R.id.customRadio);
 		
 		mEtTotalBill = (EditText) findViewById(R.id.etTotalBill);
+		mEtTotalBill.setFocusable(true);
 		mEtTotalBill.setSelection(mEtTotalBill.getText().length());
 		mEtTotalBill.addTextChangedListener(new TextWatcher() {
 			//TODO prepend $
 			
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				
+				if(mEtTotalBill.length() > 0) {
+					if(!String.valueOf(s.charAt(0)).equals("$")) {
+						if(String.valueOf(s).contains("$")) {
+							String totalBillString = mEtTotalBill.getText().toString();
+							int index = totalBillString.lastIndexOf("$");
+							Log.d("tag", String.valueOf(index));
+							totalBillString = totalBillString.substring(index + 1);
+							mEtTotalBill.setText(totalBillString);
+							Log.d("tag", mEtTotalBill.getText().toString());
+						}  else {
+							mEtTotalBill.setText(getBillAsDollarString());
+						}
+						mEtTotalBill.setSelection(mEtTotalBill.length());
+					} else {
+						if(mEtTotalBill.length() == 1) {
+							mEtTotalBill.setText("");
+						} 
+						
+					}
+				}
 				
 				onRadioButtonClicked(mRadioButtonSelected);
 			}
@@ -49,14 +72,11 @@ public class TipActivity extends Activity {
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
 				
+				
 			}
 			
 			@Override
 			public void afterTextChanged(Editable s) {
-//				if(s.charAt(0) != '$') {
-//					mBillString = getBillAsDollarString();
-//					mEtTotalBill.setText(mBillString);
-//				}
 				
 			}
 		});
@@ -64,31 +84,6 @@ public class TipActivity extends Activity {
 		mTvTip = (TextView) findViewById(R.id.tvTip);
 		mEtCustomTip = (EditText) findViewById(R.id.etCustomTip);
 		mEtCustomTip.setFocusable(true);
-		
-		//TODO prepend $
-		mEtCustomTip.addTextChangedListener(new TextWatcher() {
-			
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				mRadioGroup.check(R.id.customRadio);
-				onRadioButtonClicked(mCustomRadioButton);
-				
-			}
-			
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void afterTextChanged(Editable s) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		
 		mEtCustomTip.setOnFocusChangeListener(new OnFocusChangeListener() {
 			
 			@Override
@@ -100,6 +95,24 @@ public class TipActivity extends Activity {
 						
 						@Override
 						public void onTextChanged(CharSequence s, int start, int before, int count) {
+							
+							mRadioGroup.check(R.id.customRadio);
+							if(mEtCustomTip.length() > 0) {
+								String percentString = String.valueOf(s);
+								if(!String.valueOf(s.charAt(s.length() - 1)).equals("%")) {
+									if (percentString.contains("%")) {
+										int index = percentString.indexOf("%");
+										percentString = percentString.substring(0, index);
+									}
+									mEtCustomTip.setText(getTipAsPercentage(percentString));
+								} else {
+									if (mEtCustomTip.length() == 1) {
+										mEtCustomTip.setText("");
+									}
+									
+								}								
+							} 
+						
 							onRadioButtonClicked(mCustomRadioButton);
 							
 						}
@@ -134,43 +147,50 @@ public class TipActivity extends Activity {
 		return "$" + mEtTotalBill.getText().toString(); 
 	}
 	
+	private String getTipAsPercentage(String s) {
+		return s + "%";
+	}
+	
 	private double getBillAmount() {
-		double billAmount = Double.parseDouble(mEtTotalBill.getText().toString());
+		double billAmount = Double.parseDouble(removeDollarSign(mEtTotalBill.getText().toString()));
 		return billAmount;
 	}
 	
 	private void showTipAmount(double tipPercentage, double billAmount) {
 		mTipAmount = getTipAmount(tipPercentage, billAmount);
-		mTvTip.setText(String.valueOf(mTipAmount));	
+		mTvTip.setText("$" + String.valueOf(mTipAmount));	
+	}
+	
+	private String removeDollarSign(String s) {
+		
+		if(String.valueOf(s.charAt(0)).equals("$")) {
+			s = s.substring(1);
+		}
+		return s;
 	}
 	
 	private double getTipAmount (double tipPercentage, double billAmount) {
 		return billAmount * tipPercentage / 100.0;
 	}
-	/*
-	private void showNoBillAmountDialog() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(TipActivity.this);
-		builder.setMessage("Please type in the bill amount").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				
-			}
-		});
-		builder.create().show();
-	}
-	*/
 	
 	private double getCustomTipPercentage() {
-		return Double.parseDouble(mEtCustomTip.getText().toString());
+		
+		String customTipString = mEtCustomTip.getText().toString();
+		if(customTipString.contains("%")) {
+			int index = customTipString.lastIndexOf("%");
+			customTipString = customTipString.substring(0, index);
+		}
+		return Double.parseDouble(customTipString);
 	}
 	
 	public void onRadioButtonClicked(View view) {
 		
 		//TODO on select, dismiss keyboard?
-		
+		TextView tvTotalBill = (TextView) findViewById(R.id.totalBill);
 		mRadioButtonSelected = (RadioButton) view;
-		if (mEtTotalBill.getText().toString().trim().isEmpty() || mEtTotalBill.getText().toString() == "$" ) {
+		if (mEtTotalBill.getText().toString().trim().isEmpty() || mEtTotalBill.getText().toString().equals("$")) {
 			mTvTip.setText("");
+			tvTotalBill.setText("");
 			mTipAmount = 0;
 				
 		} else {
@@ -197,8 +217,8 @@ public class TipActivity extends Activity {
 				break;
 			case R.id.customRadio:
 				if (checked)
-					mEtCustomTip.setSelection(mEtCustomTip.getText().length());
 					if (!mEtCustomTip.getText().toString().trim().isEmpty()) {
+						mEtCustomTip.setSelection(mEtCustomTip.getText().length() - 1);
 						mCustomTipPercentage = getCustomTipPercentage();
 						showTipAmount(mCustomTipPercentage, mBillAmount);
 					} else {
@@ -212,7 +232,6 @@ public class TipActivity extends Activity {
 			
 			double totalBill = mTipAmount + getBillAmount();
 			
-			TextView tvTotalBill = (TextView) findViewById(R.id.totalBill);
 			tvTotalBill.setText("$" + String.valueOf(totalBill));
 			
 		}

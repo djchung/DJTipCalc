@@ -98,13 +98,14 @@
         android:layout_marginTop="14dp"
         android:text="@string/totalString" />
 
-    <TextView
+   <TextView
         android:id="@+id/totalBill"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/textView2"
         android:layout_alignBottom="@+id/textView2"
         android:layout_alignRight="@+id/tvTip"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         />
 
 </RelativeLayout>
