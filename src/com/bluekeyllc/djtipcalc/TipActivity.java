@@ -4,15 +4,19 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 public class TipActivity extends Activity {
 	private EditText mEtTotalBill;
 	private TextView mTvTip;
+	private RadioButton mRadioButtonSelected;
 	private double mBillAmount;
 	private double mTipAmount;
 	
@@ -21,8 +25,32 @@ public class TipActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tip);
 		
-		//TODO member variable convention?
+		RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup1);
+		int checkedId = radioGroup.getCheckedRadioButtonId();
+		mRadioButtonSelected = (RadioButton) findViewById(checkedId);
+		
 		mEtTotalBill = (EditText) findViewById(R.id.etTotalBill);
+		mEtTotalBill.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				onRadioButtonClicked(mRadioButtonSelected);
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
 		mTvTip = (TextView) findViewById(R.id.tvTip);	
 	}
 
@@ -56,13 +84,14 @@ public class TipActivity extends Activity {
 	
 	public void onRadioButtonClicked(View view) {
 		
+		mRadioButtonSelected = (RadioButton) view;
 		if (mEtTotalBill.getText().toString().trim().isEmpty()) {
-			showNoBillAmountDialog();
+			mTvTip.setText("");
 				
 		} else {
 			
 			mBillAmount = getBillAmount();
-			boolean checked = ((RadioButton) view).isChecked();
+			boolean checked = mRadioButtonSelected.isChecked();
 			
 			switch(view.getId()) {
 			
