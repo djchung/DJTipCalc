@@ -15,7 +15,8 @@
         android:theme="@style/CustomTheme"        
         >
         <activity
-            android:name="com.bluekeyllc.djtipcalc.TipActivity"
+            android:name="com.bluekeyllc.djtipcalc.activities.TipActivity"
+            android:windowSoftInputMode="stateVisible"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
