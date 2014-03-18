@@ -1,9 +1,4 @@
-package com.bluekeyllc.djtipcalc.activities;
-
-import com.bluekeyllc.djtipcalc.R;
-import com.bluekeyllc.djtipcalc.R.id;
-import com.bluekeyllc.djtipcalc.R.layout;
-import com.bluekeyllc.djtipcalc.R.menu;
+package com.bluekeyllc.djtipcalc;
 
 import android.app.Activity;
 import android.os.Bundle;

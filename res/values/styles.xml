@@ -14,12 +14,13 @@
 
     <!-- Application theme. -->
     <style name="CustomTheme" parent="AppBaseTheme">
-        <item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground</item>
+       <item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground</item>
         
     </style>
-    <style name="WindowTitleBackground">     
+ <style name="WindowTitleBackground">     
         <item name="android:background">#BFFFE8</item>
     </style>
+   
     
 
 </resources>
