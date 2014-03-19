@@ -1,5 +1,7 @@
 package com.bluekeyllc.djtipcalc;
 
+import java.text.NumberFormat;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -20,6 +22,7 @@ public class TipActivity extends Activity {
 	private RadioButton mCustomRadioButton;
 	private RadioGroup mRadioGroup;
 	private EditText mEtCustomTip;
+	private NumberFormat mNumberFormat;
 	private double mBillAmount;
 	private double mTipAmount;
 	private double mCustomTipPercentage;
@@ -28,6 +31,8 @@ public class TipActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tip);
+		
+		mNumberFormat = NumberFormat.getCurrencyInstance();
 		
 		mRadioGroup = (RadioGroup) findViewById(R.id.radioGroup1);
 		mRadioGroup.check(R.id.radio10);
@@ -232,7 +237,10 @@ public class TipActivity extends Activity {
 			
 			double totalBill = mTipAmount + getBillAmount();
 			
-			tvTotalBill.setText("$" + String.valueOf(totalBill));
+			String totalBillString = mNumberFormat.format(totalBill);
+			
+//			tvTotalBill.setText("$" + String.valueOf(totalBill));
+			tvTotalBill.setText(totalBillString);
 			
 		}
 	
